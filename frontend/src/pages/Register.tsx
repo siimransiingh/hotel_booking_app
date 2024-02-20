@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
-
-type RegisterFormData = {
+import { useMutation } from "react-query";
+import * as apiClient from '../api-client'
+export type RegisterFormData = {
     firstName: string,
     lastName: string,
     email: string,
@@ -16,8 +17,17 @@ const Register = () => {
         formState: { errors }
     } = useForm<RegisterFormData>();
 
+    const mutation = useMutation(apiClient.register, {
+        onSuccess: () => {
+            console.log("successful")
+        },
+        onError: (error: Error) => {
+            console.log(error.message);
+        }
+    })
+
     const onSubmit = handleSubmit((data) => {
-        console.log(data)
+        mutation.mutate(data)
     })
 
     return (
@@ -28,24 +38,24 @@ const Register = () => {
                     First name
                     <input className="border  rounded w-full py-1 px-2 font-normal"
                         {...register("firstName", { required: "This field is required" })}></input>
-                {errors.firstName && (
-                    <span className="text-red-500">{errors.firstName.message}</span>
-                )}
+                    {errors.firstName && (
+                        <span className="text-red-500">{errors.firstName.message}</span>
+                    )}
                 </label>
                 <label className="text-gray-700 flex-1 text-sm font-bold">
                     Last name
                     <input className="border rounded w-full py-1 px-2 font-normal"
                         {...register("lastName", { required: "This field is required" })}></input>
-                  {errors.lastName && (
-                    <span className="text-red-500">{errors.lastName.message}</span>
-                )}
+                    {errors.lastName && (
+                        <span className="text-red-500">{errors.lastName.message}</span>
+                    )}
                 </label>
             </div>
             <label className="text-gray-700 flex-1 text-sm font-bold">
                 Email
                 <input type="email" className="border rounded w-full py-1 px-2 font-normal"
                     {...register("email", { required: "This field is required" })}></input>
-                      {errors.email && (
+                {errors.email && (
                     <span className="text-red-500">{errors.email.message}</span>
                 )}
             </label>
@@ -58,7 +68,7 @@ const Register = () => {
                             message: "Password must be atleast 6 characters"
                         },
                     })}></input>
-                      {errors.password && (
+                {errors.password && (
                     <span className="text-red-500">{errors.password.message}</span>
                 )}
             </label>
@@ -74,7 +84,7 @@ const Register = () => {
                             }
                         }
                     })}></input>
-                      {errors.confirmPassword && (
+                {errors.confirmPassword && (
                     <span className="text-red-500">{errors.confirmPassword.message}</span>
                 )}
             </label>
