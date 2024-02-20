@@ -4,6 +4,7 @@ import "dotenv/config"
 import  mongoose  from "mongoose";
 import userRoutes from './routes/Users'
 import authRoutes from './routes/auth'
+
 mongoose.connect(process.env.URI as string)
 
 const app = express();
